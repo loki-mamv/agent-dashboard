@@ -127,9 +127,18 @@
                             <div class="multi-select-dropdown" id="statusFilterDropdown"></div>
                         </div>
                     </div>
+                    <div class="view-toggle" id="viewToggle">
+                        <button class="view-toggle-btn active" id="listViewBtn" title="List view">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        </button>
+                        <button class="view-toggle-btn" id="kanbanViewBtn" title="Board view">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="12" rx="1"/></svg>
+                        </button>
+                    </div>
                     <div class="filter-count" id="filterCount">15 tasks</div>
                 </div>
                 <div class="task-list" id="taskList"></div>
+                <div class="kanban-board" id="kanbanBoard" style="display:none;"></div>
             </section>
 
             <!-- Activity Feed -->
@@ -349,6 +358,128 @@
         });
 
         renderTasks();
+
+        // ---- View Toggle (List / Kanban) ----
+        let currentView = 'list';
+        const kanbanStatuses = ['Queued', 'In Progress', 'Completed', 'Blocked'];
+        const kanbanStatusColors = { 'Queued': '#8892a4', 'In Progress': '#2b7de9', 'Completed': '#0f8a5f', 'Blocked': '#c4163a' };
+
+        function getAgentStatus(agentName) {
+            const a = agents.find(ag => ag.name === agentName);
+            return a ? a.status : 'idle';
+        }
+
+        function renderKanban() {
+            const board = document.getElementById('kanbanBoard');
+            board.innerHTML = '';
+
+            const filtered = tasks.filter(t => {
+                const agentMatch = selectedAgents.has('All Agents') || selectedAgents.has(t.agent);
+                const statusMatch = selectedStatuses.has('All') || selectedStatuses.has(t.status);
+                return agentMatch && statusMatch;
+            });
+            document.getElementById('filterCount').textContent = filtered.length + ' task' + (filtered.length !== 1 ? 's' : '');
+            updateFilterBtnText();
+
+            kanbanStatuses.forEach(status => {
+                const col = document.createElement('div');
+                col.className = 'kanban-column';
+
+                const colTasks = filtered.filter(t => t.status === status);
+
+                col.innerHTML = `
+                    <div class="kanban-column-header">
+                        <div class="kanban-column-title">
+                            <span class="kanban-column-dot" style="background:${kanbanStatusColors[status]};"></span>
+                            ${status}
+                        </div>
+                        <span class="kanban-column-count">${colTasks.length}</span>
+                    </div>
+                `;
+
+                const cardsContainer = document.createElement('div');
+                cardsContainer.className = 'kanban-cards';
+
+                colTasks.forEach(t => {
+                    const agentSt = getAgentStatus(t.agent);
+                    const card = document.createElement('div');
+                    card.className = 'kanban-card';
+                    card.dataset.agent = t.agent;
+                    card.innerHTML = `
+                        <div class="kanban-card-name">${t.name}</div>
+                        <div class="kanban-card-meta">
+                            <div class="kanban-card-agent">
+                                <span class="kanban-card-agent-dot" style="background:${statusColors[agentSt]};"></span>
+                                ${t.agent}
+                            </div>
+                            <div class="kanban-card-priority">
+                                <span class="priority-dot" style="background:${priorityColors[t.priority]};"></span>
+                                ${t.priority}
+                            </div>
+                        </div>
+                        <div class="kanban-card-tags">${t.tags.map(tag => '<span class="tag">' + tag + '</span>').join('')}</div>
+                    `;
+                    cardsContainer.appendChild(card);
+                });
+
+                col.appendChild(cardsContainer);
+                board.appendChild(col);
+            });
+
+            highlightKanbanCards();
+        }
+
+        function highlightKanbanCards() {
+            document.querySelectorAll('.kanban-card').forEach(card => {
+                if (!selectedAgent) {
+                    card.classList.remove('highlight', 'dimmed');
+                } else if (card.dataset.agent === selectedAgent) {
+                    card.classList.add('highlight');
+                    card.classList.remove('dimmed');
+                } else {
+                    card.classList.add('dimmed');
+                    card.classList.remove('highlight');
+                }
+            });
+        }
+
+        function setView(view) {
+            currentView = view;
+            const listEl = document.getElementById('taskList');
+            const boardEl = document.getElementById('kanbanBoard');
+            const listBtn = document.getElementById('listViewBtn');
+            const kanbanBtn = document.getElementById('kanbanViewBtn');
+
+            if (view === 'list') {
+                listEl.style.display = '';
+                boardEl.style.display = 'none';
+                listBtn.classList.add('active');
+                kanbanBtn.classList.remove('active');
+                renderTasks();
+            } else {
+                listEl.style.display = 'none';
+                boardEl.style.display = 'flex';
+                listBtn.classList.remove('active');
+                kanbanBtn.classList.add('active');
+                renderKanban();
+            }
+        }
+
+        document.getElementById('listViewBtn').addEventListener('click', () => setView('list'));
+        document.getElementById('kanbanViewBtn').addEventListener('click', () => setView('kanban'));
+
+        // Patch renderTasks and highlightAgentTasks to also handle kanban
+        const origRenderTasks = renderTasks;
+        renderTasks = function() {
+            if (currentView === 'kanban') { renderKanban(); return; }
+            origRenderTasks();
+        };
+
+        const origHighlight = highlightAgentTasks;
+        highlightAgentTasks = function() {
+            origHighlight();
+            if (currentView === 'kanban') highlightKanbanCards();
+        };
 
         // ---- Activity Feed ----
         const activities = [
