@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAMV Agent Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4M4.22 4.22l2.83 2.83m9.9 9.9l2.83 2.83M1 12h4m14 0h4M4.22 19.78l2.83-2.83m9.9-9.9l2.83-2.83"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="header-title">MAMV Agent Dashboard</h1>
+                <p class="header-sub" id="headerTime"></p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-stat">
+                <span class="header-stat-val" style="color:#0f8a5f;">5</span>
+                <span class="header-stat-label">Active</span>
+            </div>
+            <div class="header-stat">
+                <span class="header-stat-val" style="color:#c67a08;">2</span>
+                <span class="header-stat-label">Idle</span>
+            </div>
+            <div class="header-stat">
+                <span class="header-stat-val" style="color:#c4163a;">1</span>
+                <span class="header-stat-label">Error</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Agent Roster -->
+        <section class="section">
+            <h2 class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Agent Roster
+            </h2>
+            <div class="agent-grid" id="agentGrid"></div>
+        </section>
+
+        <!-- Main Content: Task Board + Activity Feed -->
+        <div class="content-split">
+            <!-- Task Board -->
+            <section class="section task-section">
+                <h2 class="section-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                    Task Board
+                </h2>
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Agent</label>
+                        <div class="multi-select" id="agentFilter">
+                            <button class="multi-select-btn" id="agentFilterBtn">All Agents <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+                            <div class="multi-select-dropdown" id="agentFilterDropdown"></div>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Status</label>
+                        <div class="multi-select" id="statusFilter">
+                            <button class="multi-select-btn" id="statusFilterBtn">All Statuses <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+                            <div class="multi-select-dropdown" id="statusFilterDropdown"></div>
+                        </div>
+                    </div>
+                    <div class="filter-count" id="filterCount">15 tasks</div>
+                </div>
+                <div class="task-list" id="taskList"></div>
+            </section>
+
+            <!-- Activity Feed -->
+            <section class="section activity-section">
+                <h2 class="section-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Activity Feed
+                </h2>
+                <div class="activity-feed" id="activityFeed"></div>
+
+                <!-- Alert Log -->
+                <h3 class="subsection-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    Alert Log
+                </h3>
+                <div class="alert-log" id="alertLog"></div>
+            </section>
+        </div>
+
+        <!-- Daily Summary -->
+        <section class="section">
+            <h2 class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 4v16"/></svg>
+                Daily Summary
+            </h2>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="summary-icon" style="background:rgba(43,125,233,0.08);color:#2b7de9;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </div>
+                    <div class="summary-val">12</div>
+                    <div class="summary-label">Pages Generated</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon" style="background:rgba(91,95,207,0.08);color:#5b5fcf;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <div class="summary-val">5</div>
+                    <div class="summary-label">Emails Drafted</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon" style="background:rgba(124,58,237,0.08);color:#7c3aed;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    </div>
+                    <div class="summary-val">3</div>
+                    <div class="summary-label">Posts Written</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon" style="background:rgba(198,122,8,0.08);color:#c67a08;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                    </div>
+                    <div class="summary-val">470K</div>
+                    <div class="summary-label">Total Tokens</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon" style="background:rgba(15,138,95,0.08);color:#0f8a5f;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <div class="summary-val">$0.40</div>
+                    <div class="summary-label">Total Cost</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // ---- Update header time ----
+        function updateTime() {
+            const now = new Date();
+            const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            document.getElementById('headerTime').textContent = now.toLocaleDateString('en-US', opts);
+        }
+        updateTime();
+        setInterval(updateTime, 30000);
+
+        // ---- Agent Data ----
+        const agents = [
+            { name: 'Loki', role: 'Orchestrator', status: 'active', model: 'Claude Sonnet', task: 'Reviewing SEO agent output', tokens: '45K', cost: '$0.12', heartbeat: '2 min ago', color: '#2b7de9' },
+            { name: 'Scout', role: 'SEO Specialist', status: 'active', model: 'Kimi 2.5', task: 'Generating product comparison pages for HTMLDecks', tokens: '120K', cost: '$0.08', heartbeat: '5 min ago', color: '#0d8aba' },
+            { name: 'Pixel', role: 'Copywriter', status: 'idle', model: 'Kimi 2.5', task: 'Wrote 3 blog posts', tokens: '80K', cost: '$0.05', heartbeat: '22 min ago', color: '#5b5fcf' },
+            { name: 'Cass', role: 'Research Analyst', status: 'active', model: 'Kimi 2.5', task: 'Competitor analysis: Canva alternatives', tokens: '95K', cost: '$0.06', heartbeat: '8 min ago', color: '#7c3aed' },
+            { name: 'Forge', role: 'Email Marketing', status: 'active', model: 'Kimi 2.5', task: 'Building welcome drip for PageBuilderHQ', tokens: '60K', cost: '$0.04', heartbeat: '12 min ago', color: '#c67a08' },
+            { name: 'Radar', role: 'Social Media', status: 'error', model: 'Kimi 2.5', task: 'Twitter API rate limited', tokens: '30K', cost: '$0.02', heartbeat: '45 min ago', color: '#c4163a' },
+            { name: 'Atlas', role: 'Analytics', status: 'idle', model: 'Kimi 2.5', task: 'Weekly traffic report', tokens: '40K', cost: '$0.03', heartbeat: '35 min ago', color: '#0f8a5f' }
+        ];
+
+        const statusColors = { active: '#0f8a5f', idle: '#c67a08', error: '#c4163a' };
+        const statusLabels = { active: 'Active', idle: 'Idle', error: 'Error' };
+
+        // ---- Render Agent Cards ----
+        const agentGrid = document.getElementById('agentGrid');
+        agents.forEach(a => {
+            const card = document.createElement('div');
+            card.className = 'agent-card';
+            card.innerHTML = `
+                <div class="agent-card-header">
+                    <div class="agent-avatar" style="background:${a.color}15;color:${a.color};">
+                        ${a.name.charAt(0)}
+                    </div>
+                    <div class="agent-info">
+                        <div class="agent-name">${a.name}</div>
+                        <div class="agent-role">${a.role}</div>
+                    </div>
+                    <div class="status-badge status-${a.status}">
+                        <span class="status-dot"></span>
+                        ${statusLabels[a.status]}
+                    </div>
+                </div>
+                <div class="agent-task">
+                    <span class="task-label">${a.status === 'idle' ? 'Last task' : a.status === 'error' ? 'Error' : 'Working on'}:</span>
+                    ${a.task}
+                </div>
+                <div class="agent-card-footer">
+                    <div class="agent-meta-item">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                        ${a.model}
+                    </div>
+                    <div class="agent-meta-item">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        ${a.heartbeat}
+                    </div>
+                    <div class="agent-meta-item tokens">
+                        ${a.tokens} tokens / ${a.cost}
+                    </div>
+                </div>
+            `;
+            agentGrid.appendChild(card);
+        });
+
+        // ---- Task Data ----
+        const tasks = [
+            { name: 'Generate 12 product comparison pages', agent: 'Scout', status: 'In Progress', priority: 'High', started: '9:15 AM', tags: ['#seo', '#htmldecks'] },
+            { name: 'Review SEO agent output batch', agent: 'Loki', status: 'In Progress', priority: 'High', started: '10:00 AM', tags: ['#review', '#quality'] },
+            { name: 'Competitor analysis: Canva alternatives', agent: 'Cass', status: 'In Progress', priority: 'Medium', started: '8:30 AM', tags: ['#research', '#competitive'] },
+            { name: 'Build welcome drip for PageBuilderHQ', agent: 'Forge', status: 'In Progress', priority: 'High', started: '9:45 AM', tags: ['#email', '#pagebuilderhq'] },
+            { name: 'Write blog post: "HTML vs PDF Presentations"', agent: 'Pixel', status: 'Completed', priority: 'Medium', started: '7:00 AM', tags: ['#content', '#htmldecks'] },
+            { name: 'Write blog post: "5 Landing Page Mistakes"', agent: 'Pixel', status: 'Completed', priority: 'Medium', started: '8:00 AM', tags: ['#content', '#pagebuilderhq'] },
+            { name: 'Write blog post: "Email Template Best Practices"', agent: 'Pixel', status: 'Completed', priority: 'Low', started: '8:45 AM', tags: ['#content', '#emailkits'] },
+            { name: 'Post Twitter thread on pSEO strategy', agent: 'Radar', status: 'Blocked', priority: 'Medium', started: '10:30 AM', tags: ['#social', '#twitter'] },
+            { name: 'Weekly traffic report compilation', agent: 'Atlas', status: 'Completed', priority: 'Medium', started: '6:00 AM', tags: ['#analytics', '#report'] },
+            { name: 'Draft cold email sequence for HireLoki', agent: 'Forge', status: 'Queued', priority: 'Medium', started: '-', tags: ['#email', '#hireloki'] },
+            { name: 'Keyword gap analysis: EmailKits vs competitors', agent: 'Scout', status: 'Queued', priority: 'Medium', started: '-', tags: ['#seo', '#emailkits'] },
+            { name: 'Generate FAQ schema for all product pages', agent: 'Scout', status: 'Queued', priority: 'Low', started: '-', tags: ['#seo', '#schema'] },
+            { name: 'Review and approve 3 email campaigns', agent: 'Loki', status: 'Completed', priority: 'High', started: '8:30 AM', tags: ['#review', '#email'] },
+            { name: 'Update pricing page copy', agent: 'Pixel', status: 'Queued', priority: 'Low', started: '-', tags: ['#content', '#copy'] },
+            { name: 'Research DME market acquisition targets', agent: 'Cass', status: 'Queued', priority: 'Low', started: '-', tags: ['#research', '#dme'] }
+        ];
+
+        const priorityColors = { High: '#c4163a', Medium: '#c67a08', Low: '#8892a4' };
+        const statusTaskColors = { 'In Progress': '#2b7de9', 'Completed': '#0f8a5f', 'Queued': '#8892a4', 'Blocked': '#c4163a' };
+
+        // ---- Multi-Select Filters ----
+        const agentNames = ['All Agents', 'Loki', 'Scout', 'Pixel', 'Cass', 'Forge', 'Radar', 'Atlas', 'Mike'];
+        const statusNames = ['All', 'In Progress', 'Completed', 'Queued', 'Blocked'];
+
+        let selectedAgents = new Set(['All Agents']);
+        let selectedStatuses = new Set(['All']);
+
+        function buildDropdown(container, items, selectedSet, onUpdate) {
+            container.innerHTML = '';
+            items.forEach(item => {
+                const label = document.createElement('label');
+                label.className = 'dropdown-item';
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.checked = selectedSet.has(item);
+                cb.addEventListener('change', () => {
+                    const allKey = items[0];
+                    if (item === allKey) {
+                        selectedSet.clear();
+                        selectedSet.add(allKey);
+                    } else {
+                        selectedSet.delete(allKey);
+                        if (cb.checked) selectedSet.add(item);
+                        else selectedSet.delete(item);
+                        if (selectedSet.size === 0) selectedSet.add(allKey);
+                    }
+                    buildDropdown(container, items, selectedSet, onUpdate);
+                    onUpdate();
+                });
+                label.appendChild(cb);
+                label.appendChild(document.createTextNode(' ' + item));
+                container.appendChild(label);
+            });
+        }
+
+        function updateFilterBtnText() {
+            const agentBtn = document.getElementById('agentFilterBtn');
+            const statusBtn = document.getElementById('statusFilterBtn');
+            if (selectedAgents.has('All Agents')) agentBtn.innerHTML = 'All Agents <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>';
+            else agentBtn.innerHTML = [...selectedAgents].join(', ') + ' <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>';
+            if (selectedStatuses.has('All')) statusBtn.innerHTML = 'All Statuses <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>';
+            else statusBtn.innerHTML = [...selectedStatuses].join(', ') + ' <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>';
+        }
+
+        function renderTasks() {
+            const list = document.getElementById('taskList');
+            list.innerHTML = '';
+            const filtered = tasks.filter(t => {
+                const agentMatch = selectedAgents.has('All Agents') || selectedAgents.has(t.agent);
+                const statusMatch = selectedStatuses.has('All') || selectedStatuses.has(t.status);
+                return agentMatch && statusMatch;
+            });
+            document.getElementById('filterCount').textContent = filtered.length + ' task' + (filtered.length !== 1 ? 's' : '');
+
+            filtered.forEach(t => {
+                const row = document.createElement('div');
+                row.className = 'task-row';
+                row.innerHTML = `
+                    <div class="task-name">${t.name}</div>
+                    <div class="task-agent">${t.agent}</div>
+                    <div class="task-status"><span class="task-status-badge" style="background:${statusTaskColors[t.status]}15;color:${statusTaskColors[t.status]};">${t.status}</span></div>
+                    <div class="task-priority"><span class="priority-dot" style="background:${priorityColors[t.priority]};"></span>${t.priority}</div>
+                    <div class="task-started">${t.started}</div>
+                    <div class="task-tags">${t.tags.map(tag => '<span class="tag">' + tag + '</span>').join('')}</div>
+                `;
+                list.appendChild(row);
+            });
+            updateFilterBtnText();
+        }
+
+        buildDropdown(document.getElementById('agentFilterDropdown'), agentNames, selectedAgents, renderTasks);
+        buildDropdown(document.getElementById('statusFilterDropdown'), statusNames, selectedStatuses, renderTasks);
+
+        // Toggle dropdowns
+        document.getElementById('agentFilterBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('agentFilterDropdown').classList.toggle('open');
+            document.getElementById('statusFilterDropdown').classList.remove('open');
+        });
+        document.getElementById('statusFilterBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('statusFilterDropdown').classList.toggle('open');
+            document.getElementById('agentFilterDropdown').classList.remove('open');
+        });
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('open'));
+        });
+
+        renderTasks();
+
+        // ---- Activity Feed ----
+        const activities = [
+            { agent: 'Scout', text: 'Generated 12 SEO pages — pending Loki review', time: '2 min ago', color: '#0d8aba' },
+            { agent: 'Pixel', text: 'Completed blog post: "5 Landing Page Mistakes"', time: '15 min ago', color: '#5b5fcf' },
+            { agent: 'Forge', text: 'Queued email campaign draft for approval', time: '30 min ago', color: '#c67a08' },
+            { agent: 'Radar', text: 'Hit Twitter API rate limit — backing off 15min', time: '45 min ago', color: '#c4163a' },
+            { agent: 'Atlas', text: 'Published weekly analytics summary to shared memory', time: '1 hr ago', color: '#0f8a5f' },
+            { agent: 'Loki', text: 'Approved and sent 3 email campaigns', time: '1.5 hr ago', color: '#2b7de9' }
+        ];
+
+        const feedEl = document.getElementById('activityFeed');
+        activities.forEach(a => {
+            const item = document.createElement('div');
+            item.className = 'activity-item';
+            item.innerHTML = `
+                <div class="activity-dot" style="background:${a.color};"></div>
+                <div class="activity-content">
+                    <div class="activity-text"><strong>${a.agent}</strong> ${a.text}</div>
+                    <div class="activity-time">${a.time}</div>
+                </div>
+            `;
+            feedEl.appendChild(item);
+        });
+
+        // ---- Alert Log ----
+        const alerts = [
+            { level: 'error', text: 'Radar: Twitter API rate limit (auto-retry in 15min)', time: '45 min ago' },
+            { level: 'warning', text: 'Scout: 2 pages flagged for thin content — queued for Loki review', time: '1 hr ago' }
+        ];
+
+        const alertEl = document.getElementById('alertLog');
+        alerts.forEach(a => {
+            const item = document.createElement('div');
+            item.className = 'alert-item alert-' + a.level;
+            item.innerHTML = `
+                <div class="alert-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-text">${a.text}</div>
+                    <div class="alert-time">${a.time}</div>
+                </div>
+            `;
+            alertEl.appendChild(item);
+        });
+
+    })();
+    </script>
+</body>
+</html>
