@@ -282,11 +282,17 @@ body {
     flex: 1;
 }
 
-.sidebar-agent-role {
-    font-size: 0.65rem;
-    color: var(--text-muted);
+.sidebar-agent-role-badge {
+    font-size: 0.6rem;
+    font-weight: 600;
     font-family: var(--font-mono);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 3px;
     margin-left: auto;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
 }
 
 .sidebar-agent-tasks {
