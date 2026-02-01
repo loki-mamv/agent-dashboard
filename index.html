@@ -369,6 +369,11 @@
             return a ? a.status : 'idle';
         }
 
+        function getAgentColor(agentName) {
+            const a = agents.find(ag => ag.name === agentName);
+            return a ? a.color : '#8892a4';
+        }
+
         function renderKanban() {
             const board = document.getElementById('kanbanBoard');
             board.innerHTML = '';
@@ -401,17 +406,15 @@
                 cardsContainer.className = 'kanban-cards';
 
                 colTasks.forEach(t => {
-                    const agentSt = getAgentStatus(t.agent);
+                    const agentColor = getAgentColor(t.agent);
                     const card = document.createElement('div');
                     card.className = 'kanban-card';
                     card.dataset.agent = t.agent;
+                    card.style.borderTopColor = agentColor;
                     card.innerHTML = `
+                        <div class="kanban-card-agent-badge" style="background:${agentColor};">${t.agent}</div>
                         <div class="kanban-card-name">${t.name}</div>
                         <div class="kanban-card-meta">
-                            <div class="kanban-card-agent">
-                                <span class="kanban-card-agent-dot" style="background:${statusColors[agentSt]};"></span>
-                                ${t.agent}
-                            </div>
                             <div class="kanban-card-priority">
                                 <span class="priority-dot" style="background:${priorityColors[t.priority]};"></span>
                                 ${t.priority}

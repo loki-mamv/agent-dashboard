@@ -671,7 +671,7 @@ body {
 .kanban-cards {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
     flex: 1;
     min-height: 40px;
 }
@@ -679,6 +679,7 @@ body {
 .kanban-card {
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
+    border-top: 3px solid var(--border-subtle);
     border-radius: var(--radius-md);
     padding: 14px;
     display: flex;
@@ -690,7 +691,6 @@ body {
 
 .kanban-card:hover {
     box-shadow: var(--shadow-md);
-    border-color: var(--border-accent);
 }
 
 .kanban-card.highlight {
@@ -716,20 +716,17 @@ body {
     gap: 8px;
 }
 
-.kanban-card-agent {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.76rem;
-    color: var(--text-secondary);
+.kanban-card-agent-badge {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.68rem;
+    font-weight: 600;
     font-family: var(--font-mono);
-}
-
-.kanban-card-agent-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
+    color: #fff;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
 }
 
 .kanban-card-priority {
