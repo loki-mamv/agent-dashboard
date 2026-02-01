@@ -254,9 +254,7 @@
             });
         }
 
-        renderSidebarAgents();
-
-        // ---- Task Data ----
+        // ---- Task Data (must be before renderSidebarAgents) ----
         const tasks = [
             { name: 'Generate 12 product comparison pages', agent: 'Scout', status: 'In Progress', priority: 'High', started: '9:15 AM', tags: ['#seo', '#htmldecks'] },
             { name: 'Review SEO agent output batch', agent: 'Loki', status: 'In Progress', priority: 'High', started: '10:00 AM', tags: ['#review', '#quality'] },
@@ -368,6 +366,7 @@
             document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('open'));
         });
 
+        renderSidebarAgents();
         renderTasks();
 
         // ---- View Toggle (List / Kanban) ----
