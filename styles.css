@@ -1319,3 +1319,299 @@ body {
     color: var(--text-muted);
     margin-top: 8px;
 }
+
+/* ============================================
+   Task Detail Panel
+   ============================================ */
+
+.task-detail-panel {
+    background: var(--bg-card);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.task-detail-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--bg-elevated);
+}
+
+.task-detail-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.task-detail-status {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.task-detail-status.status-in-progress {
+    background: rgba(43,125,233,0.1);
+    color: #2b7de9;
+}
+
+.task-detail-status.status-completed {
+    background: rgba(15,138,95,0.1);
+    color: #0f8a5f;
+}
+
+.task-detail-status.status-queued {
+    background: rgba(136,146,164,0.1);
+    color: #8892a4;
+}
+
+.task-detail-status.status-blocked {
+    background: rgba(196,22,58,0.1);
+    color: #c4163a;
+}
+
+.task-detail-close {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+}
+
+.task-detail-close:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.task-detail-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.task-detail-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.task-detail-agent {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.task-detail-agent-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.task-detail-priority {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.task-detail-priority.priority-high {
+    background: rgba(196,22,58,0.1);
+    color: #c4163a;
+}
+
+.task-detail-priority.priority-medium {
+    background: rgba(198,122,8,0.1);
+    color: #c67a08;
+}
+
+.task-detail-priority.priority-low {
+    background: rgba(136,146,164,0.1);
+    color: #8892a4;
+}
+
+.task-detail-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+}
+
+.task-detail-section {
+    margin-bottom: 24px;
+}
+
+.task-detail-section:last-child {
+    margin-bottom: 0;
+}
+
+.task-detail-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.task-detail-section-icon {
+    font-size: 1rem;
+}
+
+.task-detail-section-header h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Agent Plan */
+.agent-plan {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.agent-plan-content {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.plan-step {
+    padding: 4px 0;
+    padding-left: 8px;
+    border-left: 2px solid var(--accent-blue);
+    margin-bottom: 6px;
+}
+
+.plan-line {
+    padding: 4px 0;
+}
+
+.plan-empty {
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+.agent-plan-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-subtle);
+}
+
+/* Task Detail Options Row */
+.task-detail-options {
+    display: flex;
+    gap: 16px;
+}
+
+.modal-field.compact {
+    flex: 1;
+}
+
+.modal-field.compact label {
+    font-size: 0.65rem;
+}
+
+.modal-field.compact select {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+}
+
+/* Activity in detail panel */
+.task-activity {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-activity .activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.85rem;
+}
+
+.task-activity .activity-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+}
+
+.task-activity .activity-content {
+    flex: 1;
+}
+
+.task-activity .activity-text {
+    color: var(--text-secondary);
+}
+
+.task-activity .activity-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-left: 8px;
+}
+
+.activity-empty {
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* Task Detail Footer */
+.task-detail-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background: var(--bg-elevated);
+}
+
+/* Indicators */
+.plan-indicator {
+    margin-left: 6px;
+    font-size: 0.8rem;
+}
+
+.plan-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    background: rgba(43,125,233,0.1);
+    color: #2b7de9;
+    border-radius: 4px;
+    margin-left: 8px;
+}
+
+/* Make task rows clickable */
+.task-row {
+    cursor: pointer;
+}
+
+.kanban-card {
+    cursor: pointer;
+}

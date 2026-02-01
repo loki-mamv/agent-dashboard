@@ -165,70 +165,92 @@
         </main>
     </div>
 
-    <!-- Context Modal -->
-    <div class="modal-overlay" id="contextModal">
-        <div class="modal">
-            <h3 class="modal-title">Add Context</h3>
-            <p class="modal-subtitle" id="contextTaskName"></p>
-            
-            <div class="existing-context" id="existingContext" style="display:none;">
-                <div class="existing-context-label">Existing Context</div>
-                <div class="existing-context-text" id="existingContextText"></div>
-                <div class="existing-context-meta" id="existingContextMeta"></div>
+    <!-- Task Detail Panel -->
+    <div class="modal-overlay" id="taskDetailModal">
+        <div class="task-detail-panel">
+            <div class="task-detail-header">
+                <div class="task-detail-header-top">
+                    <span class="task-detail-status" id="taskDetailStatus">In Progress</span>
+                    <button class="task-detail-close" onclick="closeModal('taskDetailModal')">✕</button>
+                </div>
+                <h2 class="task-detail-title" id="taskDetailTitle">Task Title</h2>
+                <div class="task-detail-meta">
+                    <span class="task-detail-agent" id="taskDetailAgent">
+                        <img src="" id="taskDetailAgentAvatar" class="task-detail-agent-avatar">
+                        <span id="taskDetailAgentName">Agent</span>
+                    </span>
+                    <span class="task-detail-priority" id="taskDetailPriority">Medium</span>
+                </div>
             </div>
             
-            <div class="modal-field">
-                <label>Add Context / Instructions</label>
-                <textarea id="contextInput" placeholder="Add context, clarification, or specific instructions for the agent..."></textarea>
+            <div class="task-detail-body">
+                <!-- Agent's Plan Section -->
+                <div class="task-detail-section">
+                    <div class="task-detail-section-header">
+                        <span class="task-detail-section-icon">🤖</span>
+                        <h3>Agent's Plan</h3>
+                    </div>
+                    <div class="agent-plan" id="agentPlan">
+                        <div class="agent-plan-content" id="agentPlanContent">
+                            <!-- Agent's approach will be shown here -->
+                        </div>
+                        <div class="agent-plan-meta" id="agentPlanMeta"></div>
+                    </div>
+                </div>
+                
+                <!-- Your Context Section -->
+                <div class="task-detail-section">
+                    <div class="task-detail-section-header">
+                        <span class="task-detail-section-icon">👤</span>
+                        <h3>Your Input</h3>
+                    </div>
+                    
+                    <div class="existing-context" id="existingContext" style="display:none;">
+                        <div class="existing-context-label">Previous Context</div>
+                        <div class="existing-context-text" id="existingContextText"></div>
+                        <div class="existing-context-meta" id="existingContextMeta"></div>
+                    </div>
+                    
+                    <div class="modal-field">
+                        <label>Add Context, Instructions, or Message to Agent</label>
+                        <textarea id="contextInput" placeholder="Add clarification, redirect the approach, or send a message to the agent..."></textarea>
+                    </div>
+                    
+                    <div class="task-detail-options">
+                        <div class="modal-field compact">
+                            <label>Priority</label>
+                            <select id="prioritySelect">
+                                <option value="">No change</option>
+                                <option value="High">🔥 High</option>
+                                <option value="Medium">⚡ Medium</option>
+                                <option value="Low">📋 Low</option>
+                            </select>
+                        </div>
+                        <div class="modal-field compact">
+                            <label>Notify</label>
+                            <select id="notifySelect">
+                                <option value="next">Next heartbeat</option>
+                                <option value="immediate">Immediately</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Activity Log -->
+                <div class="task-detail-section">
+                    <div class="task-detail-section-header">
+                        <span class="task-detail-section-icon">📋</span>
+                        <h3>Activity</h3>
+                    </div>
+                    <div class="task-activity" id="taskActivity">
+                        <!-- Activity items will be shown here -->
+                    </div>
+                </div>
             </div>
             
-            <div class="modal-field">
-                <label>Priority Override</label>
-                <select id="prioritySelect">
-                    <option value="">No change</option>
-                    <option value="High">🔥 High — Today</option>
-                    <option value="Medium">⚡ Medium — This Week</option>
-                    <option value="Low">📋 Low — Backlog</option>
-                </select>
-            </div>
-            
-            <div class="modal-field">
-                <label>Notify Agent</label>
-                <select id="notifySelect">
-                    <option value="next">On next heartbeat (recommended)</option>
-                    <option value="immediate">Immediately (wake agent now)</option>
-                </select>
-            </div>
-            
-            <div class="modal-actions">
-                <button class="modal-btn secondary" onclick="closeModal('contextModal')">Cancel</button>
-                <button class="modal-btn primary" onclick="saveContext()">Save Context</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Message Modal -->
-    <div class="modal-overlay" id="messageModal">
-        <div class="modal">
-            <h3 class="modal-title">Message Agent</h3>
-            <p class="modal-subtitle" id="messageAgentName"></p>
-            
-            <div class="modal-field">
-                <label>Message</label>
-                <textarea id="messageInput" placeholder="Type your message to the agent..."></textarea>
-            </div>
-            
-            <div class="modal-field">
-                <label>Delivery</label>
-                <select id="messageDeliverySelect">
-                    <option value="next">On next heartbeat</option>
-                    <option value="immediate">Immediately (wake agent)</option>
-                </select>
-            </div>
-            
-            <div class="modal-actions">
-                <button class="modal-btn secondary" onclick="closeModal('messageModal')">Cancel</button>
-                <button class="modal-btn primary" onclick="sendMessage()">Send Message</button>
+            <div class="task-detail-footer">
+                <button class="modal-btn secondary" onclick="closeModal('taskDetailModal')">Close</button>
+                <button class="modal-btn primary" onclick="saveTaskInput()">Save & Notify Agent</button>
             </div>
         </div>
     </div>
@@ -281,11 +303,45 @@
     // ---- Modal Functions (global scope) ----
     let currentTaskIndex = null;
 
-    function openContextModal(taskIndex) {
+    const agentAvatars = {
+        'Loki': 'avatars/loki.png',
+        'Beacon': 'avatars/beacon.png',
+        'Pixel': 'avatars/pixel.png',
+        'Cass': 'avatars/cass.png',
+        'Forge': 'avatars/forge.png',
+        'Radar': 'avatars/radar.png',
+        'Atlas': 'avatars/atlas.png'
+    };
+
+    function openTaskDetail(taskIndex) {
         currentTaskIndex = taskIndex;
         const task = window.dashboardTasks[taskIndex];
-        document.getElementById('contextTaskName').textContent = task.name;
         
+        // Header info
+        document.getElementById('taskDetailTitle').textContent = task.name;
+        document.getElementById('taskDetailStatus').textContent = task.status;
+        document.getElementById('taskDetailStatus').className = 'task-detail-status status-' + task.status.toLowerCase().replace(' ', '-');
+        document.getElementById('taskDetailAgentName').textContent = task.agent;
+        document.getElementById('taskDetailAgentAvatar').src = agentAvatars[task.agent] || 'avatars/loki.png';
+        document.getElementById('taskDetailPriority').textContent = task.priority;
+        document.getElementById('taskDetailPriority').className = 'task-detail-priority priority-' + task.priority.toLowerCase();
+        
+        // Agent's plan
+        const planContent = document.getElementById('agentPlanContent');
+        const planMeta = document.getElementById('agentPlanMeta');
+        if (task.agentPlan) {
+            planContent.innerHTML = task.agentPlan.split('\n').map(line => 
+                line.startsWith('•') || line.startsWith('-') 
+                    ? `<div class="plan-step">${line}</div>`
+                    : `<div class="plan-line">${line}</div>`
+            ).join('');
+            planMeta.textContent = `Last updated by ${task.agent} · ${task.planUpdated || 'recently'}`;
+        } else {
+            planContent.innerHTML = '<div class="plan-empty">Agent hasn\'t created a plan yet. They\'ll outline their approach on the next heartbeat.</div>';
+            planMeta.textContent = '';
+        }
+        
+        // Existing context
         const existingEl = document.getElementById('existingContext');
         if (task.context) {
             existingEl.style.display = 'block';
@@ -295,14 +351,40 @@
             existingEl.style.display = 'none';
         }
         
+        // Activity log
+        const activityEl = document.getElementById('taskActivity');
+        if (task.activity && task.activity.length > 0) {
+            activityEl.innerHTML = task.activity.map(a => `
+                <div class="activity-item">
+                    <span class="activity-dot" style="background:${a.color || '#8892a4'}"></span>
+                    <div class="activity-content">
+                        <span class="activity-text">${a.text}</span>
+                        <span class="activity-time">${a.time}</span>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            activityEl.innerHTML = '<div class="activity-empty">No activity yet</div>';
+        }
+        
+        // Reset input
         document.getElementById('contextInput').value = '';
-        document.getElementById('contextModal').classList.add('active');
+        document.getElementById('prioritySelect').value = '';
+        
+        document.getElementById('taskDetailModal').classList.add('active');
+    }
+
+    // Legacy function for backwards compatibility
+    function openContextModal(taskIndex) {
+        openTaskDetail(taskIndex);
     }
 
     function openMessageModal(agentName) {
-        document.getElementById('messageAgentName').textContent = 'Direct message to: ' + agentName;
-        document.getElementById('messageInput').value = '';
-        document.getElementById('messageModal').classList.add('active');
+        // Find a task for this agent to open the detail panel
+        const taskIndex = window.dashboardTasks.findIndex(t => t.agent === agentName);
+        if (taskIndex >= 0) {
+            openTaskDetail(taskIndex);
+        }
     }
 
     function openNewTaskModal() {
@@ -315,24 +397,44 @@
         document.getElementById(id).classList.remove('active');
     }
 
-    function saveContext() {
+    function saveTaskInput() {
         const text = document.getElementById('contextInput').value.trim();
-        if (text && currentTaskIndex !== null) {
-            window.dashboardTasks[currentTaskIndex].context = text;
-            window.dashboardTasks[currentTaskIndex].contextBy = 'Mike';
-            window.dashboardTasks[currentTaskIndex].contextTime = 'just now';
+        const priority = document.getElementById('prioritySelect').value;
+        
+        if (currentTaskIndex !== null) {
+            if (text) {
+                // Add to context
+                window.dashboardTasks[currentTaskIndex].context = text;
+                window.dashboardTasks[currentTaskIndex].contextBy = 'Mike';
+                window.dashboardTasks[currentTaskIndex].contextTime = 'just now';
+                
+                // Add to activity
+                if (!window.dashboardTasks[currentTaskIndex].activity) {
+                    window.dashboardTasks[currentTaskIndex].activity = [];
+                }
+                window.dashboardTasks[currentTaskIndex].activity.unshift({
+                    text: 'Mike added context: "' + text.substring(0, 50) + (text.length > 50 ? '...' : '') + '"',
+                    time: 'just now',
+                    color: '#2b7de9'
+                });
+            }
+            
+            if (priority) {
+                window.dashboardTasks[currentTaskIndex].priority = priority;
+                if (!window.dashboardTasks[currentTaskIndex].activity) {
+                    window.dashboardTasks[currentTaskIndex].activity = [];
+                }
+                window.dashboardTasks[currentTaskIndex].activity.unshift({
+                    text: 'Mike changed priority to ' + priority,
+                    time: 'just now',
+                    color: '#c67a08'
+                });
+            }
+            
             window.rerenderTasks();
-            alert('✓ Context saved! Agent will see this on next heartbeat.');
+            alert('✓ Saved! Agent will see this on next heartbeat.');
         }
-        closeModal('contextModal');
-    }
-
-    function sendMessage() {
-        const text = document.getElementById('messageInput').value.trim();
-        if (text) {
-            alert('✓ Message sent! Agent will receive on next heartbeat.');
-        }
-        closeModal('messageModal');
+        closeModal('taskDetailModal');
     }
 
     function createNewTask() {
@@ -351,7 +453,13 @@
                 tags: [],
                 context: context || null,
                 contextBy: context ? 'Mike' : null,
-                contextTime: context ? 'just now' : null
+                contextTime: context ? 'just now' : null,
+                agentPlan: null,
+                activity: [{
+                    text: 'Task created by Mike',
+                    time: 'just now',
+                    color: '#0f8a5f'
+                }]
             });
             window.rerenderTasks();
             alert('✓ Task created!');
@@ -470,21 +578,93 @@
 
         // ---- Task Data (must be before renderSidebarAgents) ----
         const tasks = [
-            { name: 'Generate 12 product comparison pages', agent: 'Beacon', status: 'In Progress', priority: 'High', started: '9:15 AM', tags: ['#seo', '#htmldecks'], context: 'Focus on HTML Decks vs Canva, Pitch, and Google Slides comparisons.', contextBy: 'Mike', contextTime: '2h ago' },
-            { name: 'Review SEO agent output batch', agent: 'Loki', status: 'In Progress', priority: 'High', started: '10:00 AM', tags: ['#review', '#quality'], context: null },
-            { name: 'Competitor analysis: Canva alternatives', agent: 'Cass', status: 'In Progress', priority: 'Medium', started: '8:30 AM', tags: ['#research', '#competitive'], context: 'Include pricing comparison and feature matrix.', contextBy: 'Mike', contextTime: '3h ago' },
-            { name: 'Build welcome drip for PageBuilderHQ', agent: 'Forge', status: 'In Progress', priority: 'High', started: '9:45 AM', tags: ['#email', '#pagebuilderhq'], context: null },
-            { name: 'Write blog post: "HTML vs PDF Presentations"', agent: 'Pixel', status: 'Completed', priority: 'Medium', started: '7:00 AM', tags: ['#content', '#htmldecks'], context: null },
-            { name: 'Write blog post: "5 Landing Page Mistakes"', agent: 'Pixel', status: 'Completed', priority: 'Medium', started: '8:00 AM', tags: ['#content', '#pagebuilderhq'], context: null },
-            { name: 'Write blog post: "Email Template Best Practices"', agent: 'Pixel', status: 'Completed', priority: 'Low', started: '8:45 AM', tags: ['#content', '#emailkits'], context: null },
-            { name: 'Post Twitter thread on pSEO strategy', agent: 'Radar', status: 'Blocked', priority: 'Medium', started: '10:30 AM', tags: ['#social', '#twitter'], context: null },
-            { name: 'Weekly traffic report compilation', agent: 'Atlas', status: 'Completed', priority: 'Medium', started: '6:00 AM', tags: ['#analytics', '#report'], context: null },
-            { name: 'Draft cold email sequence for HireLoki', agent: 'Forge', status: 'Queued', priority: 'Medium', started: '-', tags: ['#email', '#hireloki'], context: null },
-            { name: 'Keyword gap analysis: EmailKits vs competitors', agent: 'Beacon', status: 'Queued', priority: 'Medium', started: '-', tags: ['#seo', '#emailkits'], context: null },
-            { name: 'Generate FAQ schema for all product pages', agent: 'Beacon', status: 'Queued', priority: 'Low', started: '-', tags: ['#seo', '#schema'], context: null },
-            { name: 'Review and approve 3 email campaigns', agent: 'Loki', status: 'Completed', priority: 'High', started: '8:30 AM', tags: ['#review', '#email'], context: null },
-            { name: 'Update pricing page copy', agent: 'Pixel', status: 'Queued', priority: 'Low', started: '-', tags: ['#content', '#copy'], context: null },
-            { name: 'Research DME market acquisition targets', agent: 'Cass', status: 'Queued', priority: 'Low', started: '-', tags: ['#research', '#dme'], context: 'Focus on Southeast region. Dad mentioned interest in FL/GA markets.', contextBy: 'Mike', contextTime: '1d ago' }
+            { 
+                name: 'Generate 12 product comparison pages', 
+                agent: 'Beacon', 
+                status: 'In Progress', 
+                priority: 'High', 
+                started: '9:15 AM', 
+                tags: ['#seo', '#htmldecks'], 
+                context: 'Focus on HTML Decks vs Canva, Pitch, and Google Slides comparisons.', 
+                contextBy: 'Mike', 
+                contextTime: '2h ago',
+                agentPlan: '• Research top 5 competitors for HTML presentation tools\n• Create comparison matrix (features, pricing, pros/cons)\n• Generate 12 landing pages using pSEO template\n• Include schema markup for rich snippets\n• Submit to sitemap after generation',
+                planUpdated: '1h ago',
+                activity: [
+                    { text: 'Generated 8/12 comparison pages', time: '30m ago', color: '#0f8a5f' },
+                    { text: 'Mike added context about competitors', time: '2h ago', color: '#2b7de9' },
+                    { text: 'Task started', time: '3h ago', color: '#8892a4' }
+                ]
+            },
+            { 
+                name: 'Review SEO agent output batch', 
+                agent: 'Loki', 
+                status: 'In Progress', 
+                priority: 'High', 
+                started: '10:00 AM', 
+                tags: ['#review', '#quality'], 
+                context: null,
+                agentPlan: '• Review 12 generated pages for quality\n• Check keyword density and placement\n• Verify schema markup is correct\n• Flag any thin content for revision\n• Approve batch for publishing',
+                planUpdated: '15m ago',
+                activity: [
+                    { text: 'Reviewed 4/12 pages', time: '10m ago', color: '#0f8a5f' },
+                    { text: 'Task started', time: '30m ago', color: '#8892a4' }
+                ]
+            },
+            { 
+                name: 'Competitor analysis: Canva alternatives', 
+                agent: 'Cass', 
+                status: 'In Progress', 
+                priority: 'Medium', 
+                started: '8:30 AM', 
+                tags: ['#research', '#competitive'], 
+                context: 'Include pricing comparison and feature matrix.', 
+                contextBy: 'Mike', 
+                contextTime: '3h ago',
+                agentPlan: '• Identify top 10 Canva competitors\n• Deep dive into features, pricing tiers\n• Create comparison spreadsheet\n• Analyze positioning and messaging\n• Draft executive summary with recommendations',
+                planUpdated: '2h ago',
+                activity: [
+                    { text: 'Completed research on 6/10 competitors', time: '1h ago', color: '#0f8a5f' },
+                    { text: 'Mike requested pricing comparison', time: '3h ago', color: '#2b7de9' }
+                ]
+            },
+            { 
+                name: 'Build welcome drip for PageBuilderHQ', 
+                agent: 'Forge', 
+                status: 'In Progress', 
+                priority: 'High', 
+                started: '9:45 AM', 
+                tags: ['#email', '#pagebuilderhq'], 
+                context: null,
+                agentPlan: '• Design 5-email welcome sequence\n• Email 1: Welcome + quick start guide\n• Email 2: Feature highlight (templates)\n• Email 3: Case study / social proof\n• Email 4: Tips & best practices\n• Email 5: Upgrade offer with discount',
+                planUpdated: '45m ago',
+                activity: [
+                    { text: 'Drafted emails 1-3', time: '30m ago', color: '#0f8a5f' }
+                ]
+            },
+            { name: 'Write blog post: "HTML vs PDF Presentations"', agent: 'Pixel', status: 'Completed', priority: 'Medium', started: '7:00 AM', tags: ['#content', '#htmldecks'], context: null, agentPlan: null, activity: [] },
+            { name: 'Write blog post: "5 Landing Page Mistakes"', agent: 'Pixel', status: 'Completed', priority: 'Medium', started: '8:00 AM', tags: ['#content', '#pagebuilderhq'], context: null, agentPlan: null, activity: [] },
+            { name: 'Write blog post: "Email Template Best Practices"', agent: 'Pixel', status: 'Completed', priority: 'Low', started: '8:45 AM', tags: ['#content', '#emailkits'], context: null, agentPlan: null, activity: [] },
+            { name: 'Post Twitter thread on pSEO strategy', agent: 'Radar', status: 'Blocked', priority: 'Medium', started: '10:30 AM', tags: ['#social', '#twitter'], context: null, agentPlan: '• Draft 10-tweet thread on pSEO\n• Include examples from HTMLDecks\n• Add relevant images/screenshots', planUpdated: '2h ago', activity: [{ text: 'Hit Twitter API rate limit', time: '45m ago', color: '#c4163a' }] },
+            { name: 'Weekly traffic report compilation', agent: 'Atlas', status: 'Completed', priority: 'Medium', started: '6:00 AM', tags: ['#analytics', '#report'], context: null, agentPlan: null, activity: [] },
+            { name: 'Draft cold email sequence for HireLoki', agent: 'Forge', status: 'Queued', priority: 'Medium', started: '-', tags: ['#email', '#hireloki'], context: null, agentPlan: null, activity: [] },
+            { name: 'Keyword gap analysis: EmailKits vs competitors', agent: 'Beacon', status: 'Queued', priority: 'Medium', started: '-', tags: ['#seo', '#emailkits'], context: null, agentPlan: null, activity: [] },
+            { name: 'Generate FAQ schema for all product pages', agent: 'Beacon', status: 'Queued', priority: 'Low', started: '-', tags: ['#seo', '#schema'], context: null, agentPlan: null, activity: [] },
+            { name: 'Review and approve 3 email campaigns', agent: 'Loki', status: 'Completed', priority: 'High', started: '8:30 AM', tags: ['#review', '#email'], context: null, agentPlan: null, activity: [] },
+            { name: 'Update pricing page copy', agent: 'Pixel', status: 'Queued', priority: 'Low', started: '-', tags: ['#content', '#copy'], context: null, agentPlan: null, activity: [] },
+            { 
+                name: 'Research DME market acquisition targets', 
+                agent: 'Cass', 
+                status: 'Queued', 
+                priority: 'Low', 
+                started: '-', 
+                tags: ['#research', '#dme'], 
+                context: 'Focus on Southeast region. Dad mentioned interest in FL/GA markets.', 
+                contextBy: 'Mike', 
+                contextTime: '1d ago',
+                agentPlan: null,
+                activity: [{ text: 'Mike added context about SE region', time: '1d ago', color: '#2b7de9' }]
+            }
         ];
 
         // Make tasks available globally for modal functions
@@ -552,19 +732,17 @@
                 const row = document.createElement('div');
                 row.className = 'task-row' + (t.context ? ' has-context' : '');
                 row.dataset.agent = t.agent;
+                row.onclick = () => openTaskDetail(taskIndex);
                 row.innerHTML = `
                     <div class="task-name">
                         ${t.name}
                         ${t.context ? '<span class="context-indicator" title="Has context from Mike">📝</span>' : ''}
+                        ${t.agentPlan ? '<span class="plan-indicator" title="Agent has a plan">🤖</span>' : ''}
                     </div>
                     <div class="task-agent">${t.agent}</div>
                     <div class="task-status"><span class="task-status-badge" style="background:${statusTaskColors[t.status]}15;color:${statusTaskColors[t.status]};">${t.status}</span></div>
                     <div class="task-priority"><span class="priority-dot" style="background:${priorityColors[t.priority]};"></span>${t.priority}</div>
                     <div class="task-started">${t.started}</div>
-                    <div class="task-actions-cell">
-                        <button class="task-action-btn context-btn" onclick="event.stopPropagation(); openContextModal(${taskIndex})" title="Add context">+ Context</button>
-                        <button class="task-action-btn message-btn" onclick="event.stopPropagation(); openMessageModal('${t.agent}')" title="Message agent">Message</button>
-                    </div>
                 `;
                 list.appendChild(row);
             });
@@ -656,6 +834,7 @@
                     card.className = 'kanban-card' + (t.context ? ' has-context' : '');
                     card.dataset.agent = t.agent;
                     card.style.borderTopColor = agentColor;
+                    card.onclick = () => openTaskDetail(taskIndex);
                     card.innerHTML = `
                         <div class="kanban-card-agent-badge" style="background:${agentColor};">${t.agent}</div>
                         <div class="kanban-card-name">${t.name}</div>
@@ -664,12 +843,9 @@
                                 <span class="priority-dot" style="background:${priorityColors[t.priority]};"></span>
                                 ${t.priority}
                             </div>
+                            ${t.agentPlan ? '<span class="plan-badge" title="Agent has a plan">🤖 Plan</span>' : ''}
                         </div>
                         ${t.context ? '<div class="kanban-card-context"><span class="context-indicator">📝</span> Context from Mike</div>' : ''}
-                        <div class="kanban-card-actions">
-                            <button class="task-action-btn context-btn" onclick="event.stopPropagation(); openContextModal(${taskIndex})">+ Context</button>
-                            <button class="task-action-btn message-btn" onclick="event.stopPropagation(); openMessageModal('${t.agent}')">Message</button>
-                        </div>
                     `;
                     cardsContainer.appendChild(card);
                 });
