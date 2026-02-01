@@ -1065,3 +1065,257 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--text-muted);
 }
+
+/* ============================================
+   Task Intervention UI
+   ============================================ */
+
+.header-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 16px;
+}
+
+.header-btn-primary:hover {
+    background: #2065c7;
+}
+
+.task-actions-cell {
+    display: flex;
+    gap: 6px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.task-row:hover .task-actions-cell {
+    opacity: 1;
+}
+
+.task-action-btn {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+}
+
+.task-action-btn:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+.task-action-btn.context-btn {
+    background: rgba(43,125,233,0.08);
+    border-color: rgba(43,125,233,0.2);
+    color: var(--accent-blue);
+}
+
+.task-action-btn.message-btn {
+    background: rgba(124,58,237,0.08);
+    border-color: rgba(124,58,237,0.2);
+    color: var(--accent-purple);
+}
+
+.context-indicator {
+    margin-left: 6px;
+    font-size: 0.8rem;
+}
+
+.task-row.has-context {
+    border-left: 3px solid var(--accent-blue);
+}
+
+.kanban-card.has-context {
+    border-left: 3px solid var(--accent-blue);
+}
+
+.kanban-card-context {
+    font-size: 0.7rem;
+    color: var(--accent-blue);
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border-subtle);
+}
+
+.kanban-card-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.kanban-card:hover .kanban-card-actions {
+    opacity: 1;
+}
+
+/* ============================================
+   Modals
+   ============================================ */
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    width: 90%;
+    max-width: 480px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.modal-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.modal-field {
+    margin-bottom: 16px;
+}
+
+.modal-field label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.modal-field textarea,
+.modal-field input,
+.modal-field select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    transition: border-color 0.2s;
+}
+
+.modal-field textarea:focus,
+.modal-field input:focus,
+.modal-field select:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+}
+
+.modal-field textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+.modal-btn {
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.modal-btn.secondary {
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+}
+
+.modal-btn.secondary:hover {
+    background: var(--border-subtle);
+}
+
+.modal-btn.primary {
+    background: var(--accent-blue);
+    color: white;
+}
+
+.modal-btn.primary:hover {
+    background: #2065c7;
+}
+
+.existing-context {
+    background: rgba(43,125,233,0.05);
+    border: 1px solid rgba(43,125,233,0.15);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-bottom: 16px;
+}
+
+.existing-context-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-blue);
+    margin-bottom: 6px;
+}
+
+.existing-context-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-style: italic;
+}
+
+.existing-context-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 8px;
+}
