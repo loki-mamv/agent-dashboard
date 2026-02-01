@@ -177,7 +177,7 @@
         // ---- Agent Data ----
         const agents = [
             { name: 'Loki', role: 'Orchestrator', status: 'active', model: 'Claude Sonnet', task: 'Reviewing SEO agent output', tokens: '45K', cost: '$0.12', heartbeat: '2 min ago', color: '#2b7de9', avatar: 'avatars/loki.png' },
-            { name: 'Scout', role: 'SEO Specialist', status: 'active', model: 'Kimi 2.5', task: 'Generating product comparison pages for HTMLDecks', tokens: '120K', cost: '$0.08', heartbeat: '5 min ago', color: '#0d8aba', avatar: 'avatars/scout.png' },
+            { name: 'Beacon', role: 'SEO Specialist', status: 'active', model: 'Kimi 2.5', task: 'Generating product comparison pages for HTMLDecks', tokens: '120K', cost: '$0.08', heartbeat: '5 min ago', color: '#0d8aba', avatar: 'avatars/beacon.png' },
             { name: 'Pixel', role: 'Copywriter', status: 'idle', model: 'Kimi 2.5', task: 'Wrote 3 blog posts', tokens: '80K', cost: '$0.05', heartbeat: '22 min ago', color: '#5b5fcf', avatar: 'avatars/pixel.png' },
             { name: 'Cass', role: 'Research Analyst', status: 'active', model: 'Kimi 2.5', task: 'Competitor analysis: Canva alternatives', tokens: '95K', cost: '$0.06', heartbeat: '8 min ago', color: '#7c3aed', avatar: 'avatars/cass.png' },
             { name: 'Forge', role: 'Email Marketing', status: 'active', model: 'Kimi 2.5', task: 'Building welcome drip for PageBuilderHQ', tokens: '60K', cost: '$0.04', heartbeat: '12 min ago', color: '#c67a08', avatar: 'avatars/forge.png' },
@@ -261,7 +261,7 @@
 
         // ---- Task Data (must be before renderSidebarAgents) ----
         const tasks = [
-            { name: 'Generate 12 product comparison pages', agent: 'Scout', status: 'In Progress', priority: 'High', started: '9:15 AM', tags: ['#seo', '#htmldecks'] },
+            { name: 'Generate 12 product comparison pages', agent: 'Beacon', status: 'In Progress', priority: 'High', started: '9:15 AM', tags: ['#seo', '#htmldecks'] },
             { name: 'Review SEO agent output batch', agent: 'Loki', status: 'In Progress', priority: 'High', started: '10:00 AM', tags: ['#review', '#quality'] },
             { name: 'Competitor analysis: Canva alternatives', agent: 'Cass', status: 'In Progress', priority: 'Medium', started: '8:30 AM', tags: ['#research', '#competitive'] },
             { name: 'Build welcome drip for PageBuilderHQ', agent: 'Forge', status: 'In Progress', priority: 'High', started: '9:45 AM', tags: ['#email', '#pagebuilderhq'] },
@@ -271,8 +271,8 @@
             { name: 'Post Twitter thread on pSEO strategy', agent: 'Radar', status: 'Blocked', priority: 'Medium', started: '10:30 AM', tags: ['#social', '#twitter'] },
             { name: 'Weekly traffic report compilation', agent: 'Atlas', status: 'Completed', priority: 'Medium', started: '6:00 AM', tags: ['#analytics', '#report'] },
             { name: 'Draft cold email sequence for HireLoki', agent: 'Forge', status: 'Queued', priority: 'Medium', started: '-', tags: ['#email', '#hireloki'] },
-            { name: 'Keyword gap analysis: EmailKits vs competitors', agent: 'Scout', status: 'Queued', priority: 'Medium', started: '-', tags: ['#seo', '#emailkits'] },
-            { name: 'Generate FAQ schema for all product pages', agent: 'Scout', status: 'Queued', priority: 'Low', started: '-', tags: ['#seo', '#schema'] },
+            { name: 'Keyword gap analysis: EmailKits vs competitors', agent: 'Beacon', status: 'Queued', priority: 'Medium', started: '-', tags: ['#seo', '#emailkits'] },
+            { name: 'Generate FAQ schema for all product pages', agent: 'Beacon', status: 'Queued', priority: 'Low', started: '-', tags: ['#seo', '#schema'] },
             { name: 'Review and approve 3 email campaigns', agent: 'Loki', status: 'Completed', priority: 'High', started: '8:30 AM', tags: ['#review', '#email'] },
             { name: 'Update pricing page copy', agent: 'Pixel', status: 'Queued', priority: 'Low', started: '-', tags: ['#content', '#copy'] },
             { name: 'Research DME market acquisition targets', agent: 'Cass', status: 'Queued', priority: 'Low', started: '-', tags: ['#research', '#dme'] }
@@ -282,7 +282,7 @@
         const statusTaskColors = { 'In Progress': '#2b7de9', 'Completed': '#0f8a5f', 'Queued': '#8892a4', 'Blocked': '#c4163a' };
 
         // ---- Multi-Select Filters ----
-        const agentNames = ['All Agents', 'Loki', 'Scout', 'Pixel', 'Cass', 'Forge', 'Radar', 'Atlas', 'Mike'];
+        const agentNames = ['All Agents', 'Loki', 'Beacon', 'Pixel', 'Cass', 'Forge', 'Radar', 'Atlas', 'Mike'];
         const statusNames = ['All', 'In Progress', 'Completed', 'Queued', 'Blocked'];
 
         let selectedAgents = new Set(['All Agents']);
@@ -504,7 +504,7 @@
 
         // ---- Activity Feed ----
         const activities = [
-            { agent: 'Scout', text: 'Generated 12 SEO pages — pending Loki review', time: '2 min ago', color: '#0d8aba' },
+            { agent: 'Beacon', text: 'Generated 12 SEO pages — pending Loki review', time: '2 min ago', color: '#0d8aba' },
             { agent: 'Pixel', text: 'Completed blog post: "5 Landing Page Mistakes"', time: '15 min ago', color: '#5b5fcf' },
             { agent: 'Forge', text: 'Queued email campaign draft for approval', time: '30 min ago', color: '#c67a08' },
             { agent: 'Radar', text: 'Hit Twitter API rate limit — backing off 15min', time: '45 min ago', color: '#c4163a' },
@@ -529,7 +529,7 @@
         // ---- Alert Log ----
         const alerts = [
             { level: 'error', text: 'Radar: Twitter API rate limit (auto-retry in 15min)', time: '45 min ago' },
-            { level: 'warning', text: 'Scout: 2 pages flagged for thin content — queued for Loki review', time: '1 hr ago' }
+            { level: 'warning', text: 'Beacon: 2 pages flagged for thin content — queued for Loki review', time: '1 hr ago' }
         ];
 
         const alertEl = document.getElementById('alertLog');
