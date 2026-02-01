@@ -254,8 +254,7 @@ body {
 }
 
 .sidebar-agent.selected {
-    background: rgba(43,125,233,0.08);
-    box-shadow: inset 3px 0 0 var(--accent-blue);
+    background: rgba(43,125,233,0.06);
 }
 
 .sidebar-agent-top {
@@ -283,19 +282,42 @@ body {
     flex: 1;
 }
 
-.sidebar-agent-model {
+.sidebar-agent-role {
     font-size: 0.65rem;
     color: var(--text-muted);
     font-family: var(--font-mono);
+    margin-left: auto;
 }
 
-.sidebar-agent-task {
-    font-size: 0.76rem;
+.sidebar-agent-tasks {
+    list-style: none;
+    padding: 0;
+    margin: 2px 0 0 16px;
+}
+
+.sidebar-agent-bullet {
+    font-size: 0.72rem;
     color: var(--text-secondary);
+    line-height: 1.5;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding-left: 16px;
+    max-width: 100%;
+}
+
+.sidebar-agent-bullet::before {
+    content: '\2022';
+    color: var(--text-muted);
+    margin-right: 6px;
+}
+
+.sidebar-agent-bullet--idle {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.sidebar-agent-bullet--idle::before {
+    display: none;
 }
 
 /* ============================================
@@ -501,13 +523,12 @@ body {
 }
 
 .task-row.highlight {
-    background: rgba(43,125,233,0.05);
-    border-left: 3px solid var(--accent-blue);
-    padding-left: 5px;
+    background: color-mix(in srgb, var(--agent-glow, var(--accent-blue)) 6%, transparent);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--agent-glow, var(--accent-blue)) 20%, transparent);
 }
 
 .task-row.dimmed {
-    opacity: 0.4;
+    opacity: 0.25;
 }
 
 .task-name {
@@ -694,12 +715,13 @@ body {
 }
 
 .kanban-card.highlight {
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 0 2px rgba(43,125,233,0.12);
+    border-color: var(--agent-glow, var(--accent-blue));
+    border-top-color: var(--agent-glow, var(--accent-blue));
+    box-shadow: 0 0 12px color-mix(in srgb, var(--agent-glow, var(--accent-blue)) 25%, transparent);
 }
 
 .kanban-card.dimmed {
-    opacity: 0.35;
+    opacity: 0.25;
 }
 
 .kanban-card-name {

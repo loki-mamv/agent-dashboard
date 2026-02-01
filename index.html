@@ -198,16 +198,24 @@
             mobileBar.innerHTML = '';
 
             agents.forEach(a => {
+                // Get active tasks for this agent
+                const agentTasks = tasks.filter(t => t.agent === a.name && t.status !== 'Completed');
+                const taskBullets = agentTasks.length > 0 
+                    ? agentTasks.map(t => `<li class="sidebar-agent-bullet">${t.name}</li>`).join('')
+                    : `<li class="sidebar-agent-bullet sidebar-agent-bullet--idle">No active tasks</li>`;
+
                 // Desktop sidebar item
                 const item = document.createElement('button');
                 item.className = 'sidebar-agent' + (selectedAgent === a.name ? ' selected' : '');
+                item.dataset.color = a.color;
+                if (selectedAgent === a.name) item.style.setProperty('--agent-glow', a.color);
                 item.innerHTML = `
                     <div class="sidebar-agent-top">
                         <span class="sidebar-dot status-dot-${a.status}"></span>
                         <span class="sidebar-agent-name">${a.name}</span>
-                        <span class="sidebar-agent-model">${a.model.split(' ').pop()}</span>
+                        <span class="sidebar-agent-role">${a.role}</span>
                     </div>
-                    <div class="sidebar-agent-task">${a.task}</div>
+                    <ul class="sidebar-agent-tasks">${taskBullets}</ul>
                 `;
                 item.addEventListener('click', () => {
                     selectedAgent = selectedAgent === a.name ? null : a.name;
@@ -230,12 +238,15 @@
         }
 
         function highlightAgentTasks() {
+            const agentColor = selectedAgent ? getAgentColor(selectedAgent) : null;
             document.querySelectorAll('.task-row').forEach(row => {
+                row.style.removeProperty('--agent-glow');
                 if (!selectedAgent) {
                     row.classList.remove('highlight', 'dimmed');
                 } else if (row.dataset.agent === selectedAgent) {
                     row.classList.add('highlight');
                     row.classList.remove('dimmed');
+                    row.style.setProperty('--agent-glow', agentColor);
                 } else {
                     row.classList.add('dimmed');
                     row.classList.remove('highlight');
@@ -433,12 +444,15 @@
         }
 
         function highlightKanbanCards() {
+            const agentColor = selectedAgent ? getAgentColor(selectedAgent) : null;
             document.querySelectorAll('.kanban-card').forEach(card => {
+                card.style.removeProperty('--agent-glow');
                 if (!selectedAgent) {
                     card.classList.remove('highlight', 'dimmed');
                 } else if (card.dataset.agent === selectedAgent) {
                     card.classList.add('highlight');
                     card.classList.remove('dimmed');
+                    card.style.setProperty('--agent-glow', agentColor);
                 } else {
                     card.classList.add('dimmed');
                     card.classList.remove('highlight');
