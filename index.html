@@ -176,13 +176,13 @@
 
         // ---- Agent Data ----
         const agents = [
-            { name: 'Loki', role: 'Orchestrator', status: 'active', model: 'Claude Sonnet', task: 'Reviewing SEO agent output', tokens: '45K', cost: '$0.12', heartbeat: '2 min ago', color: '#2b7de9' },
-            { name: 'Scout', role: 'SEO Specialist', status: 'active', model: 'Kimi 2.5', task: 'Generating product comparison pages for HTMLDecks', tokens: '120K', cost: '$0.08', heartbeat: '5 min ago', color: '#0d8aba' },
-            { name: 'Pixel', role: 'Copywriter', status: 'idle', model: 'Kimi 2.5', task: 'Wrote 3 blog posts', tokens: '80K', cost: '$0.05', heartbeat: '22 min ago', color: '#5b5fcf' },
-            { name: 'Cass', role: 'Research Analyst', status: 'active', model: 'Kimi 2.5', task: 'Competitor analysis: Canva alternatives', tokens: '95K', cost: '$0.06', heartbeat: '8 min ago', color: '#7c3aed' },
-            { name: 'Forge', role: 'Email Marketing', status: 'active', model: 'Kimi 2.5', task: 'Building welcome drip for PageBuilderHQ', tokens: '60K', cost: '$0.04', heartbeat: '12 min ago', color: '#c67a08' },
-            { name: 'Radar', role: 'Social Media', status: 'error', model: 'Kimi 2.5', task: 'Twitter API rate limited', tokens: '30K', cost: '$0.02', heartbeat: '45 min ago', color: '#c4163a' },
-            { name: 'Atlas', role: 'Analytics', status: 'idle', model: 'Kimi 2.5', task: 'Weekly traffic report', tokens: '40K', cost: '$0.03', heartbeat: '35 min ago', color: '#0f8a5f' }
+            { name: 'Loki', role: 'Orchestrator', status: 'active', model: 'Claude Sonnet', task: 'Reviewing SEO agent output', tokens: '45K', cost: '$0.12', heartbeat: '2 min ago', color: '#2b7de9', avatar: 'avatars/loki.png' },
+            { name: 'Scout', role: 'SEO Specialist', status: 'active', model: 'Kimi 2.5', task: 'Generating product comparison pages for HTMLDecks', tokens: '120K', cost: '$0.08', heartbeat: '5 min ago', color: '#0d8aba', avatar: 'avatars/scout.png' },
+            { name: 'Pixel', role: 'Copywriter', status: 'idle', model: 'Kimi 2.5', task: 'Wrote 3 blog posts', tokens: '80K', cost: '$0.05', heartbeat: '22 min ago', color: '#5b5fcf', avatar: 'avatars/pixel.png' },
+            { name: 'Cass', role: 'Research Analyst', status: 'active', model: 'Kimi 2.5', task: 'Competitor analysis: Canva alternatives', tokens: '95K', cost: '$0.06', heartbeat: '8 min ago', color: '#7c3aed', avatar: 'avatars/cass.png' },
+            { name: 'Forge', role: 'Email Marketing', status: 'active', model: 'Kimi 2.5', task: 'Building welcome drip for PageBuilderHQ', tokens: '60K', cost: '$0.04', heartbeat: '12 min ago', color: '#c67a08', avatar: 'avatars/forge.png' },
+            { name: 'Radar', role: 'Social Media', status: 'error', model: 'Kimi 2.5', task: 'Twitter API rate limited', tokens: '30K', cost: '$0.02', heartbeat: '45 min ago', color: '#c4163a', avatar: 'avatars/radar.png' },
+            { name: 'Atlas', role: 'Analytics', status: 'idle', model: 'Kimi 2.5', task: 'Weekly traffic report', tokens: '40K', cost: '$0.03', heartbeat: '35 min ago', color: '#0f8a5f', avatar: 'avatars/atlas.png' }
         ];
 
         const statusColors = { active: '#0f8a5f', idle: '#c67a08', error: '#c4163a' };
@@ -211,9 +211,14 @@
                 if (selectedAgent === a.name) item.style.setProperty('--agent-glow', a.color);
                 item.innerHTML = `
                     <div class="sidebar-agent-top">
-                        <span class="sidebar-dot status-dot-${a.status}"></span>
-                        <span class="sidebar-agent-name">${a.name}</span>
-                        <span class="sidebar-agent-role-badge" style="background:${a.color};">${a.role}</span>
+                        <img class="sidebar-agent-avatar" src="${a.avatar}" alt="${a.name}">
+                        <div class="sidebar-agent-info">
+                            <div class="sidebar-agent-name-row">
+                                <span class="sidebar-dot status-dot-${a.status}"></span>
+                                <span class="sidebar-agent-name">${a.name}</span>
+                            </div>
+                            <span class="sidebar-agent-role-badge" style="background:${a.color};">${a.role}</span>
+                        </div>
                     </div>
                     <ul class="sidebar-agent-tasks">${taskBullets}</ul>
                 `;
